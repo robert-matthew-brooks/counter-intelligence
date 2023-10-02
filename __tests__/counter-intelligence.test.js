@@ -9,21 +9,22 @@ describe('makeCipherLookup()', () => {
   });
 
   it('should have 26 entries, one for each letter', () => {
-    expect(Object.entries(makeCipherLookup('a')).length).toBe(26);
+    expect(Object.entries(makeCipherLookup('a').in).length).toBe(26);
+    expect(Object.entries(makeCipherLookup('a').out).length).toBe(26);
   });
 
   it('should map to the same letter when passed X', () => {
-    const cipherLookup = makeCipherLookup('X');
-    expect(cipherLookup['A']).toBe('A');
-    expect(cipherLookup['B']).toBe('B');
-    expect(cipherLookup['C']).toBe('C');
+    const cipher = makeCipherLookup('X');
+    expect(cipher.out[cipher.in.indexOf('A')]).toBe('A');
+    expect(cipher.out[cipher.in.indexOf('B')]).toBe('B');
+    expect(cipher.out[cipher.in.indexOf('C')]).toBe('C');
   });
 
   it('should map the last input letter to X', () => {
-    const cipherLookup = makeCipherLookup('abc');
-    expect(cipherLookup['C']).toBe('X');
-    expect(cipherLookup['D']).toBe('Y');
-    expect(cipherLookup['E']).toBe('Z');
+    const cipher = makeCipherLookup('abc');
+    expect(cipher.out[cipher.in.indexOf('C')]).toBe('X');
+    expect(cipher.out[cipher.in.indexOf('D')]).toBe('Y');
+    expect(cipher.out[cipher.in.indexOf('E')]).toBe('Z');
   });
 });
 
@@ -37,7 +38,33 @@ describe('counterIntelligence()', () => {
     expect(output).toBe(output.toUpperCase());
   });
 
-  it('should not encrypt punctuation', () => {
-    expect(counterIntelligence('!?.,')).toBe('!?.,');
+  it('should shift the last char to map to X', () => {
+    expect(counterIntelligence('Y')).toBe('X');
+  });
+
+  it('should displace all chars by the same amount', () => {
+    expect(counterIntelligence('BCDY')).toBe('ABCX');
+  });
+
+  it('should not decode spaces', () => {
+    expect(counterIntelligence('NKRRU YCKKZNKGXZ D')).toBe(
+      'HELLO SWEETHEART X'
+    );
+  });
+
+  it('should not decode punctuation', () => {
+    expect(
+      counterIntelligence(
+        'ANVNVKNA CX YRLT DY IDLLQRWR XW HXDA FJH QXVN OAXV FXAT, MJAURWP G'
+      )
+    ).toBe(
+      'REMEMBER TO PICK UP ZUCCHINI ON YOUR WAY HOME FROM WORK, DARLING X'
+    );
+  });
+
+  it('should accept lowercase chars', () => {
+    expect(counterIntelligence('ngbk g toik jge :) d')).toBe(
+      'HAVE A NICE DAY :) X'
+    );
   });
 });

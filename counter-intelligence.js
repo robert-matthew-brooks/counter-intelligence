@@ -13,16 +13,28 @@ function makeCipherLookup(encodedStr) {
   }
 
   // make a lookup table of the displaced alphabets
-  const cipherLookup = {};
+  const cipher = { in: [], out: [] };
   for (const i in inputLetters) {
-    cipherLookup[inputLetters[i]] = outputLetters[+i + displacement];
+    cipher.in.push(inputLetters[i]);
+    cipher.out.push(outputLetters[+i + displacement]);
   }
 
-  return cipherLookup;
+  return cipher;
 }
 
 function counterIntelligence(encodedStr) {
-  let outputStr = encodedStr.toUpperCase();
+  const cipher = makeCipherLookup(encodedStr);
+
+  let outputStr = '';
+
+  for (const i in encodedStr) {
+    const encodedChar = encodedStr[i].toUpperCase();
+    const cipherIndex = cipher.in.indexOf(encodedChar);
+    const decodedChar =
+      cipherIndex !== -1 ? cipher.out[cipherIndex] : encodedChar;
+
+    outputStr += decodedChar;
+  }
 
   return outputStr;
 }

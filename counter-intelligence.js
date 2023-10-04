@@ -1,15 +1,10 @@
 async function makeCipherLookup(encodedStr) {
   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const outputLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   // get lastChar - this maps to X
   const lastChar = encodedStr.charAt(encodedStr.length - 1).toUpperCase();
-  const lastCharIndex = alphabet.indexOf(lastChar);
 
-  const decodedLastChar = 'X';
-  const decodedLastCharIndex = alphabet.indexOf(decodedLastChar);
-
-  let displacement = decodedLastCharIndex - lastCharIndex;
+  let displacement = alphabet.indexOf(lastChar) - alphabet.indexOf('X');
   if (displacement < 0) displacement += alphabet.length;
 
   //frontend
@@ -18,8 +13,13 @@ async function makeCipherLookup(encodedStr) {
   // make a lookup table of the displaced alphabets
   const lookup = { in: [], out: [] };
   for (const i in alphabet) {
+    let decodedLetterIndex = +i - displacement;
+
+    // make sure new index doesn't exceed alphabet range
+    if (decodedLetterIndex < 0) decodedLetterIndex += alphabet.length;
+
     lookup.in.push(alphabet[i]);
-    lookup.out.push(outputLetters[+i + displacement]);
+    lookup.out.push(alphabet[decodedLetterIndex]);
   }
 
   return lookup;
@@ -55,7 +55,7 @@ async function counterIntelligence(encodedStr) {
     await changeLetter(i, decodedChar, isChanged);
   }
 
-  // unlock buttons
+  // frontend
   lockControls([fasterBtn]);
   unlockControls([newMsgBtn]);
 

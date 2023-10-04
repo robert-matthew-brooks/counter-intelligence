@@ -1,13 +1,49 @@
 :root {
-  --header-height: 5rem;
+  --header-height: 7rem;
   --footer-height: 3rem;
+  --font-size: 1.1rem;
 
-  --lookup-letter-height: 1.4rem;
-  --lookup-letter-width: 1.1rem;
+  --lookup-letter-height: 1.5rem;
+  /* use px to prevent js rounding errors */
+  --lookup-letter-width: 20px;
+
+  --textbox-line-height: 1.6rem;
+  --textbox-vertical-padding: 0.3rem;
+  --textbox-lines: 2;
+
+  /* colours */
+
+  --encoded-colour: rgba(255, 0, 0, 0.2);
+  --not-decoded-colour: transparent;
+  --decoded-colour: rgba(0, 255, 0, 0.2);
+  --blink-colour: rgba(255, 0, 0, 0.6);
+
+  --header-text-colour: white;
+  --header-bg-colour: #678d58;
+  --header-border-colour: #f4e285;
+
+  --main-inner-bg-colour: lightgoldenrodyellow;
+  --main-outer-bg-colour: #c0c0c0;
+  --subheader-colour: #505050;
+
+  --textbox-bg-colour: white;
+  --cipher-bg-colour: #f4e285;
+
+  --button-bg-colour: #a6c48a;
+  --button-hover-bg-colour: #b7d39d;
+
+  --footer-bg-colour: #a6c48a;
+
+  --link-colour: blue;
+  --link-hover-colour: red;
 }
 
 body {
   font-family: 'Courier New', Courier, monospace;
+  background-image: radial-gradient(
+    var(--main-inner-bg-colour),
+    var(--main-outer-bg-colour)
+  );
 }
 
 * {
@@ -24,7 +60,29 @@ header {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: lightgreen;
+  color: var(--header-text-colour);
+  text-shadow: 2px 2px 2px black;
+  border-bottom: 5px solid var(--header-bg-colour);
+}
+header::before {
+  content: ' ';
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: var(--header-height);
+  z-index: -1;
+  opacity: 0.5;
+  background-image: url('./camo-bg.avif');
+}
+
+header > h1 {
+  padding: 0.3rem 1rem;
+  text-align: center;
+  font-size: 2.5rem;
+  background-color: var(--header-bg-colour);
+  border: 2px dashed var(--header-border-colour);
 }
 
 main {
@@ -35,8 +93,21 @@ main {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
   margin: auto;
+}
+
+.subheader {
+  width: 100%;
+  margin-bottom: 0.2rem;
+
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--subheader-colour);
+  text-align: left;
+  text-transform: uppercase;
+}
+.subheader:not(:first-of-type) {
+  margin-top: 1rem;
 }
 
 footer {
@@ -44,19 +115,24 @@ footer {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: lightgrey;
+  background-color: var(--footer-bg-colour);
 }
 
 /* lookup table */
 
 #lookup-table {
-  height: calc(2 * var(--lookup-letter-height));
+  position: relative;
 
-  width: calc(26 * var(--lookup-letter-width));
+  /* +2px extra to account for border */
+  height: calc(2 * var(--lookup-letter-height) + 2px);
+  width: calc(26 * var(--lookup-letter-width) + 2px);
+
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background-color: lightgoldenrodyellow;
+
+  font-size: var(--font-size);
+  background-color: var(--cipher-bg-colour);
   border: 1px solid black;
 }
 
@@ -74,21 +150,165 @@ footer {
   align-items: center;
 }
 
-#lookup-table-outputs {
+#lookup-table__outputs {
   position: relative;
   transition-duration: 2s;
 }
 
-/* input */
+#lookup-table__focus {
+  position: absolute;
+  height: calc(2 * var(--lookup-letter-height));
+  width: var(--lookup-letter-width);
+  background-color: rgba(255, 0, 0, 0.1);
+  border: 2px solid red;
+  transition-duration: 2s;
+}
 
-#encoded-text {
+/* input/output */
+
+#text-box {
+  /* +2px extra to account for border */
+  min-height: calc(
+    (var(--textbox-lines) * var(--textbox-line-height)) +
+      (2 * var(--textbox-vertical-padding) + 2px)
+  );
   width: 100%;
+  padding: var(--textbox-vertical-padding) 0.5rem;
+
+  font-size: var(--font-size);
+  line-height: var(--textbox-line-height);
+  background-color: white;
   border: 1px solid black;
 }
 
-/* output */
+.letter--highlight {
+  animation-name: highlight;
+  animation-duration: 0.2s;
+  animation-direction: forwards;
+  animation-iteration-count: 5;
+  animation-fill-mode: forwards;
+}
+@keyframes highlight {
+  from {
+    background-color: transparent;
+  }
+  to {
+    background-color: var(--blink-colour);
+  }
+}
 
-#decoded-text {
-  width: 100%;
-  border: 1px solid black;
+.letter--encoded {
+  background-color: var(--encoded-colour);
+}
+
+.letter--not-decoded {
+  animation-name: not-decoded;
+  animation-duration: 1s;
+  animation-direction: forwards;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+@keyframes not-decoded {
+  from {
+    background-color: var(--blink-colour);
+  }
+  to {
+    background-color: var(--not-decoded-colour);
+  }
+}
+
+.letter--decoded {
+  animation-name: decoded;
+  animation-duration: 1s;
+  animation-direction: forwards;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+@keyframes decoded {
+  from {
+    background-color: var(--blink-colour);
+  }
+  to {
+    background-color: var(--decoded-colour);
+  }
+}
+
+/* controls */
+
+button {
+  margin-top: 2rem;
+  padding: 0.3rem;
+  font-family: inherit;
+  font-size: var(--font-size);
+  font-weight: bold;
+  background-color: var(--button-bg-colour);
+  cursor: pointer;
+}
+button:enabled:hover {
+  background-color: var(--button-hover-bg-colour);
+}
+
+/* other */
+
+a {
+  font-size: var(--font-size);
+  color: var(--link-colour);
+  font-weight: bold;
+  text-decoration: underline;
+}
+a:hover {
+  color: var(--link-hover-colour);
+  text-decoration: none;
+}
+
+/* SMALL screens */
+@media screen and (max-width: 600px) {
+  :root {
+    --header-height: 5rem;
+    --footer-height: 3rem;
+    --font-size: 0.9rem;
+
+    --lookup-letter-height: 1.2rem;
+    /* use px to prevent js rounding errors */
+    --lookup-letter-width: 13px;
+
+    --textbox-line-height: 1.2rem;
+    --textbox-vertical-padding: 0.3rem;
+    --textbox-lines: 3;
+  }
+
+  header > h1 {
+    padding: 0.3rem 1rem;
+    font-size: 1.5rem;
+  }
+}
+
+/* BIG screens */
+@media screen and (min-width: 1400px) {
+  :root {
+    --header-height: 10rem;
+    --footer-height: 5rem;
+    --font-size: 1.5rem;
+
+    --lookup-letter-height: 2rem;
+    /* use px to prevent js rounding errors */
+    --lookup-letter-width: 30px;
+
+    --textbox-line-height: 2.4rem;
+    --textbox-vertical-padding: 0.3rem;
+    --textbox-lines: 2;
+  }
+
+  header > h1 {
+    font-size: 3rem;
+  }
+
+  .subheader:not(:first-of-type) {
+    margin-top: 2rem;
+  }
+
+  button {
+    margin-top: 3rem;
+    padding: 0.5rem;
+  }
 }

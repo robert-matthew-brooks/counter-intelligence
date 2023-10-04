@@ -8,25 +8,33 @@
     <script src="../counter-intelligence.js"></script>
     <script src="./script.js" defer></script>
   </head>
-  <body onload="initEncodedText(); initLookup(makeCipherLookup('a'))">
+  <body onload="initFrontend()">
     <header>
       <h1>Counter Intelligence</h1>
     </header>
 
     <main>
-      <div id="encoded-text"></div>
+      <div class="subheader">Message:</div>
+      <div id="text-box"></div>
 
+      <div class="subheader">Cipher:</div>
       <div id="lookup-table">
-        <div id="lookup-table-inputs" class="lookup-table__row"></div>
-        <div id="lookup-table-outputs" class="lookup-table__row"></div>
+        <div id="lookup-table__inputs" class="lookup-table__row"></div>
+        <div id="lookup-table__outputs" class="lookup-table__row"></div>
+        <div id="lookup-table__focus" style="opacity: 0"></div>
       </div>
 
-      <div id="decoded-text"></div>
-
       <div>
-        <button onclick="setLookup(5)">Decode</button>
-        <button>New Message</button>
-        <button disabled>Faster</button>
+        <button
+          id="decode-btn"
+          onclick="counterIntelligence(encodedTexts[currentEncodedTextIndex])"
+        >
+          Decode
+        </button>
+        <button id="faster-btn" onclick="goFaster()" disabled>Faster</button>
+        <button id="new-msg-btn" onclick="newEncodedMessage()">
+          New Message
+        </button>
       </div>
     </main>
 

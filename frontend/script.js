@@ -122,7 +122,8 @@ async function setLookupTable(displacement) {
   lookupLetterWidth =
     document.getElementById('lookupTableIn0').offsetWidth + 'px';
 
-  lookupTableOutputs.style.transform = `translateX(calc(${displacement} * -${lookupLetterWidth}))`;
+  if (displacement > 0) displacement -= 26;
+  lookupTableOutputs.style.transform = `translateX(calc(${displacement} * ${lookupLetterWidth}))`;
   await sleep(setLookupTableTime);
   lookupTableFocus.style.opacity = 1;
 }

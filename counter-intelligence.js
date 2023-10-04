@@ -5,7 +5,6 @@ async function makeCipherLookup(encodedStr) {
   const lastChar = encodedStr.charAt(encodedStr.length - 1).toUpperCase();
 
   let displacement = alphabet.indexOf(lastChar) - alphabet.indexOf('X');
-  if (displacement < 0) displacement += alphabet.length;
 
   //frontend
   await setLookupTable(displacement);
@@ -17,6 +16,8 @@ async function makeCipherLookup(encodedStr) {
 
     // make sure new index doesn't exceed alphabet range
     if (decodedLetterIndex < 0) decodedLetterIndex += alphabet.length;
+    if (decodedLetterIndex >= alphabet.length)
+      decodedLetterIndex -= alphabet.length;
 
     lookup.in.push(alphabet[i]);
     lookup.out.push(alphabet[decodedLetterIndex]);
@@ -24,7 +25,6 @@ async function makeCipherLookup(encodedStr) {
 
   return lookup;
 }
-
 async function counterIntelligence(encodedStr) {
   // frontend
   lockControls([decodeBtn, newMsgBtn]);

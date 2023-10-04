@@ -39,38 +39,33 @@ function sleep(ms) {
 /* initialise frontend */
 /***********************/
 
-function initEncodedText() {
-  const text = encodedTexts[currentEncodedTextIndex];
+// set up first encoded message
+const text = encodedTexts[currentEncodedTextIndex];
 
-  for (const i in text) {
-    const letter = document.createElement('span');
-    letter.id = `char${i}`;
-    letter.classList.add('letter--encoded');
-    letter.innerHTML = text[i];
-    textBox.appendChild(letter);
-  }
+for (const i in text) {
+  const letter = document.createElement('span');
+  letter.id = `char${i}`;
+  letter.classList.add('letter--encoded');
+  letter.innerHTML = text[i];
+  textBox.appendChild(letter);
 }
 
-function initLookup() {
-  for (let i = 0; i < 26; i++) {
-    const letter = document.createElement('div');
-    letter.id = `lookupTableIn${i}`;
-    letter.innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')[i];
-    lookupTableInputs.appendChild(letter);
-  }
-
-  for (let i = 0; i < 52; i++) {
-    const letter = document.createElement('div');
-    letter.innerHTML =
-      'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')[i];
-    lookupTableOutputs.appendChild(letter);
-  }
+// generate lookup table
+for (let i = 0; i < 26; i++) {
+  const letter = document.createElement('div');
+  letter.id = `lookupTableIn${i}`;
+  letter.innerHTML = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')[i];
+  lookupTableInputs.appendChild(letter);
 }
 
-function initFrontend() {
-  initEncodedText();
-  initLookup();
+for (let i = 0; i < 52; i++) {
+  const letter = document.createElement('div');
+  letter.innerHTML =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')[i];
+  lookupTableOutputs.appendChild(letter);
 }
+
+initLookup();
 
 /*********************************/
 /* util / housekeeping functions */

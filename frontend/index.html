@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Counter Intelligence</title>
+    <link rel="stylesheet" href="./style.css" />
+    <script src="../counter-intelligence.js"></script>
+    <script src="./script.js" defer></script>
+  </head>
+  <body onload="initEncodedText(); initLookup(makeCipherLookup('a'))">
+    <header>
+      <h1>Counter Intelligence</h1>
+    </header>
+
+    <main>
+      <div id="encoded-text"></div>
+
+      <div id="lookup-table">
+        <div id="lookup-table-inputs" class="lookup-table__row"></div>
+        <div id="lookup-table-outputs" class="lookup-table__row"></div>
+      </div>
+
+      <div id="decoded-text"></div>
+
+      <div>
+        <button onclick="setLookup(5)">Decode</button>
+        <button>New Message</button>
+        <button disabled>Faster</button>
+      </div>
+    </main>
+
+    <footer>
+      <a href="https://github.com/robert-matthew-brooks/counter-intelligence">
+        GitHub
+      </a>
+      &nbsp;//&nbsp;
+      <a href="https://www.linkedin.com/in/robert-matthew-brooks/">
+        LinkedIn
+      </a>
+    </footer>
+  </body>
+</html>

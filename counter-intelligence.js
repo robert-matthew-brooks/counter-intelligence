@@ -13,25 +13,25 @@ function makeCipherLookup(encodedStr) {
   }
 
   // make a lookup table of the displaced alphabets
-  const cipher = { in: [], out: [] };
+  const lookup = { in: [], out: [] };
   for (const i in inputLetters) {
-    cipher.in.push(inputLetters[i]);
-    cipher.out.push(outputLetters[+i + displacement]);
+    lookup.in.push(inputLetters[i]);
+    lookup.out.push(outputLetters[+i + displacement]);
   }
 
-  return cipher;
+  return lookup;
 }
 
 function counterIntelligence(encodedStr) {
-  const cipher = makeCipherLookup(encodedStr);
-
   let outputStr = '';
+
+  const lookup = makeCipherLookup(encodedStr);
 
   for (const i in encodedStr) {
     const encodedChar = encodedStr[i].toUpperCase();
-    const cipherIndex = cipher.in.indexOf(encodedChar);
+    const lookupIndex = lookup.in.indexOf(encodedChar);
     const decodedChar =
-      cipherIndex !== -1 ? cipher.out[cipherIndex] : encodedChar;
+      lookupIndex !== -1 ? lookup.out[lookupIndex] : encodedChar;
 
     outputStr += decodedChar;
   }
@@ -39,4 +39,6 @@ function counterIntelligence(encodedStr) {
   return outputStr;
 }
 
-module.exports = { makeCipherLookup, counterIntelligence };
+if (typeof module === 'object' && typeof module.exports === 'object') {
+  module.exports = { makeCipherLookup, counterIntelligence };
+}

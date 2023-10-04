@@ -1,24 +1,24 @@
 async function makeCipherLookup(encodedStr) {
-  const inputLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
   const outputLetters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
   // get lastChar - this maps to X
   const lastChar = encodedStr.charAt(encodedStr.length - 1).toUpperCase();
-  const lastCharIndex = inputLetters.indexOf(lastChar);
+  const lastCharIndex = alphabet.indexOf(lastChar);
 
-  // get displacement between lastChar and X
-  let displacement = 0;
-  while (outputLetters[lastCharIndex + displacement] !== 'X') {
-    displacement++;
-  }
+  const decodedLastChar = 'X';
+  const decodedLastCharIndex = alphabet.indexOf(decodedLastChar);
+
+  let displacement = decodedLastCharIndex - lastCharIndex;
+  if (displacement < 0) displacement += alphabet.length;
 
   //frontend
   await setLookupTable(displacement);
 
   // make a lookup table of the displaced alphabets
   const lookup = { in: [], out: [] };
-  for (const i in inputLetters) {
-    lookup.in.push(inputLetters[i]);
+  for (const i in alphabet) {
+    lookup.in.push(alphabet[i]);
     lookup.out.push(outputLetters[+i + displacement]);
   }
 

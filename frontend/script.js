@@ -1,4 +1,5 @@
 let lookupLetterWidth;
+let currentDisplacement; // store in case window in resized, to reset cipher position
 
 // these should match css animation times
 let speedMultiplier = 1;
@@ -65,7 +66,15 @@ for (let i = 0; i < 52; i++) {
   lookupTableOutputs.appendChild(letter);
 }
 
-initLookup();
+window.addEventListener(
+  'resize',
+  () => {
+    lookupLetterWidth =
+      document.getElementById('lookupTableIn0').offsetWidth + 'px';
+    lookupTableOutputs.style.transform = `translateX(calc(${currentDisplacement} * ${lookupLetterWidth}))`;
+  },
+  true
+);
 
 /*********************************/
 /* util / housekeeping functions */
@@ -121,6 +130,8 @@ function newEncodedMessage() {
 async function setLookupTable(displacement) {
   lookupLetterWidth =
     document.getElementById('lookupTableIn0').offsetWidth + 'px';
+
+  currentDisplacement = displacement;
 
   if (displacement > 0) displacement -= 26;
   lookupTableOutputs.style.transform = `translateX(calc(${displacement} * ${lookupLetterWidth}))`;

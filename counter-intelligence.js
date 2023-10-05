@@ -25,6 +25,7 @@ async function makeCipherLookup(encodedStr) {
 
   return lookup;
 }
+
 async function counterIntelligence(encodedStr) {
   // frontend
   lockControls([decodeBtn, newMsgBtn]);

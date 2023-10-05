@@ -41,13 +41,11 @@ function sleep(ms) {
 /***********************/
 
 // set up first encoded message
-const text = encodedTexts[currentEncodedTextIndex];
-
-for (const i in text) {
+for (const i in encodedTexts[0]) {
   const letter = document.createElement('span');
   letter.id = `char${i}`;
   letter.classList.add('letter--encoded');
-  letter.innerHTML = text[i];
+  letter.innerHTML = encodedTexts[0][i];
   textBox.appendChild(letter);
 }
 

@@ -152,7 +152,7 @@ async function changeLetter(index, newChar, isChanged) {
   await sleep(1000);
 }
 
-async function focusLookup(index, displacement) {
+async function focusLookup(index) {
   if (index >= 0) {
     // blink input letter
     const lookupInput = document.getElementById(`lookupTableIn${index}`);
